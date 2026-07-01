@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <h1>Dashboard</h1>
+
+    <section class="cards">
+      <div class="card">
+        <span class="card-label">Items registrados</span>
+        <span class="card-value"><%= totalItems %></span>
+      </div>
+      <div class="card">
+        <span class="card-label">Categorias</span>
+        <span class="card-value"><%= totalCategorias %></span>
+      </div>
+      <div class="card">
+        <span class="card-label">Valor total del inventario</span>
+        <span class="card-value">$<%= Number(valorInventario).toFixed(2) %></span>
+      </div>
+      <div class="card card-warning">
+        <span class="card-label">Items bajo stock minimo</span>
+        <span class="card-value"><%= itemsBajoStock.length %></span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Alertas de stock bajo</h2>
+      <% if (itemsBajoStock.length === 0) { %>
+        <p class="empty-state">No hay items por debajo del stock minimo.</p>
+      <% } else { %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Codigo</th>
+              <th>Nombre</th>
+              <th>Categoria</th>
+              <th>Stock actual</th>
+              <th>Stock minimo</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% itemsBajoStock.forEach(item => { %>
+              <tr class="row-alert">
+                <td><%= item.codigo %></td>
+                <td><%= item.nombre %></td>
+                <td><%= item.categoria_nombre %></td>
+                <td><%= item.stock %></td>
+                <td><%= item.stock_minimo %></td>
+                <td><a class="btn btn-small" href="/movimientos/nuevo?item_id=<%= item.id %>">Registrar entrada</a></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </section>
+  </main>
+
+  <%- include('../partials/alerts') %>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>Movimientos de inventario</h1>
+      <a class="btn btn-primary" href="/movimientos/nuevo">+ Nuevo movimiento</a>
+    </div>
+
+    <form class="filters" method="GET" action="/movimientos">
+      <select name="item_id">
+        <option value="">Todos los items</option>
+        <% items.forEach(item => { %>
+          <option value="<%= item.id %>" <%= String(filtroItemId) === String(item.id) ? 'selected' : '' %>>
+            <%= item.codigo %> - <%= item.nombre %>
+          </option>
+        <% }) %>
+      </select>
+      <button type="submit" class="btn btn-secondary">Filtrar</button>
+      <a class="btn btn-small" href="/movimientos">Limpiar</a>
+    </form>
+
+    <% if (movimientos.length === 0) { %>
+      <p class="empty-state">No hay movimientos registrados.</p>
+    <% } else { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Item</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Stock anterior</th>
+            <th>Stock nuevo</th>
+            <th>Motivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% movimientos.forEach(mov => { %>
+            <tr>
+              <td><%= new Date(mov.created_at).toLocaleString('es') %></td>
+              <td><%= mov.item_codigo %> - <%= mov.item_nombre %></td>
+              <td>
+                <span class="badge badge-<%= mov.tipo === 'entrada' ? 'success' : (mov.tipo === 'salida' ? 'danger' : 'muted') %>">
+                  <%= mov.tipo %>
+                </span>
+              </td>
+              <td><%= mov.cantidad %></td>
+              <td><%= mov.stock_anterior %></td>
+              <td><%= mov.stock_nuevo %></td>
+              <td><%= mov.motivo || '-' %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </main>
+
+  <%- include('../partials/alerts') %>
+</body>
+</html>

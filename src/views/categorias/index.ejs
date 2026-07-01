@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>Categorias</h1>
+      <a class="btn btn-primary" href="/categorias/nueva">+ Nueva categoria</a>
+    </div>
+
+    <% if (categorias.length === 0) { %>
+      <p class="empty-state">Aun no hay categorias registradas.</p>
+    <% } else { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Items asociados</th>
+            <th class="col-actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% categorias.forEach(cat => { %>
+            <tr>
+              <td><%= cat.nombre %></td>
+              <td><%= cat.descripcion || '-' %></td>
+              <td><%= cat.total_items %></td>
+              <td class="col-actions">
+                <a class="btn btn-small" href="/categorias/<%= cat.id %>/editar">Editar</a>
+                <form
+                  id="del-cat-<%= cat.id %>"
+                  action="/categorias/<%= cat.id %>?_method=DELETE"
+                  method="POST"
+                  class="inline-form"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-small btn-danger"
+                    onclick="confirmarEliminacion('del-cat-<%= cat.id %>', 'Se eliminara la categoria «<%= cat.nombre %>»')"
+                  >Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </main>
+
+  <%- include('../partials/alerts') %>
+</body>
+</html>

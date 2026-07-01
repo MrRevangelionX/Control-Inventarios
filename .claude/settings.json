@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node server.js)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -X POST http://localhost:3000/categorias -d \"nombre=Herramientas&descripcion=Herramientas manuales\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -X POST http://localhost:3000/items -d \"codigo=HERR-001&nombre=Martillo&categoria_id=1&unidad_medida=unidad&stock=10&stock_minimo=2&precio=8.5\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -X POST http://localhost:3000/movimientos -d \"item_id=1&tipo=salida&cantidad=3&motivo=Prueba\")",
+      "Bash(curl -s http://localhost:3000/items)",
+      "Bash(curl -s http://localhost:3000/)",
+      "Read(//tmp/**)",
+      "Bash(powershell -Command \"Get-Process node -ErrorAction SilentlyContinue | Select-Object Id\")",
+      "Bash(powershell -Command \"Stop-Process -Id 12580 -Force\")",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

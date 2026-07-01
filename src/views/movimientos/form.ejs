@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container container-narrow">
+    <h1>Nuevo movimiento</h1>
+
+    <form class="form" method="POST" action="/movimientos">
+      <div class="form-group">
+        <label for="item_id">Item *</label>
+        <select id="item_id" name="item_id" required>
+          <option value="">Selecciona un item</option>
+          <% items.forEach(item => { %>
+            <option
+              value="<%= item.id %>"
+              <%= String(itemPreseleccionado) === String(item.id) ? 'selected' : '' %>
+            ><%= item.codigo %> - <%= item.nombre %> (stock: <%= item.stock %>)</option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="tipo">Tipo de movimiento *</label>
+          <select id="tipo" name="tipo" required>
+            <option value="entrada">Entrada</option>
+            <option value="salida">Salida</option>
+            <option value="ajuste">Ajuste (fija el stock exacto)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cantidad">Cantidad *</label>
+          <input type="number" id="cantidad" name="cantidad" min="1" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="motivo">Motivo</label>
+        <input type="text" id="motivo" name="motivo" maxlength="255" placeholder="Ej. Compra a proveedor, venta, merma...">
+      </div>
+
+      <div class="form-actions">
+        <a class="btn btn-secondary" href="/movimientos">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+      </div>
+    </form>
+  </main>
+
+  <%- include('../partials/alerts') %>
+</body>
+</html>

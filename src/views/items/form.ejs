@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container container-narrow">
+    <h1><%= item ? 'Editar item' : 'Nuevo item' %></h1>
+
+    <form
+      class="form"
+      method="POST"
+      action="<%= item ? `/items/${item.id}?_method=PUT` : '/items' %>"
+    >
+      <div class="form-row">
+        <div class="form-group">
+          <label for="codigo">Codigo *</label>
+          <input
+            type="text"
+            id="codigo"
+            name="codigo"
+            value="<%= item ? item.codigo : '' %>"
+            <%= item ? 'disabled' : 'required' %>
+            maxlength="50"
+            placeholder="Ej. ELEC-001"
+          >
+          <% if (item) { %>
+            <small class="hint">El codigo no se puede modificar una vez creado</small>
+          <% } %>
+        </div>
+
+        <div class="form-group">
+          <label for="categoria_id">Categoria *</label>
+          <select id="categoria_id" name="categoria_id" required>
+            <option value="">Selecciona una categoria</option>
+            <% categorias.forEach(cat => { %>
+              <option
+                value="<%= cat.id %>"
+                <%= item && String(item.categoria_id) === String(cat.id) ? 'selected' : '' %>
+              ><%= cat.nombre %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="nombre">Nombre *</label>
+        <input
+          type="text"
+          id="nombre"
+          name="nombre"
+          value="<%= item ? item.nombre : '' %>"
+          required
+          maxlength="150"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripcion</label>
+        <textarea id="descripcion" name="descripcion" rows="3" maxlength="255"><%= item ? (item.descripcion || '') : '' %></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="unidad_medida">Unidad de medida</label>
+          <input
+            type="text"
+            id="unidad_medida"
+            name="unidad_medida"
+            value="<%= item ? item.unidad_medida : 'unidad' %>"
+            maxlength="30"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="stock">Stock inicial</label>
+          <input
+            type="number"
+            id="stock"
+            name="stock"
+            value="<%= item ? item.stock : 0 %>"
+            min="0"
+            <%= item ? 'disabled' : '' %>
+          >
+          <% if (item) { %>
+            <small class="hint">Usa "Movimientos" para ajustar el stock</small>
+          <% } %>
+        </div>
+
+        <div class="form-group">
+          <label for="stock_minimo">Stock minimo</label>
+          <input
+            type="number"
+            id="stock_minimo"
+            name="stock_minimo"
+            value="<%= item ? item.stock_minimo : 0 %>"
+            min="0"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="precio">Precio unitario</label>
+          <input
+            type="number"
+            id="precio"
+            name="precio"
+            value="<%= item ? item.precio : 0 %>"
+            min="0"
+            step="0.01"
+          >
+        </div>
+      </div>
+
+      <% if (item) { %>
+        <div class="form-group">
+          <label for="estado">Estado</label>
+          <select id="estado" name="estado">
+            <option value="activo" <%= item.estado === 'activo' ? 'selected' : '' %>>Activo</option>
+            <option value="inactivo" <%= item.estado === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+          </select>
+        </div>
+      <% } %>
+
+      <div class="form-actions">
+        <a class="btn btn-secondary" href="/items">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+    </form>
+  </main>
+
+  <%- include('../partials/alerts') %>
+</body>
+</html>

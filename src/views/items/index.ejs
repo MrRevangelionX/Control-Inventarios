@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>Items</h1>
+      <a class="btn btn-primary" href="/items/nuevo">+ Nuevo item</a>
+    </div>
+
+    <form class="filters" method="GET" action="/items">
+      <input
+        type="text"
+        name="codigo"
+        placeholder="Buscar por codigo o nombre..."
+        value="<%= filtros.codigo %>"
+      >
+      <select name="categoria_id">
+        <option value="">Todas las categorias</option>
+        <% categorias.forEach(cat => { %>
+          <option value="<%= cat.id %>" <%= String(filtros.categoria_id) === String(cat.id) ? 'selected' : '' %>>
+            <%= cat.nombre %>
+          </option>
+        <% }) %>
+      </select>
+      <select name="estado">
+        <option value="">Todos los estados</option>
+        <option value="activo" <%= filtros.estado === 'activo' ? 'selected' : '' %>>Activo</option>
+        <option value="inactivo" <%= filtros.estado === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+      </select>
+      <button type="submit" class="btn btn-secondary">Filtrar</button>
+      <a class="btn btn-small" href="/items">Limpiar</a>
+    </form>
+
+    <% if (items.length === 0) { %>
+      <p class="empty-state">No se encontraron items con los filtros seleccionados.</p>
+    <% } else { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Codigo</th>
+            <th>Nombre</th>
+            <th>Categoria</th>
+            <th>Stock</th>
+            <th>Precio</th>
+            <th>Estado</th>
+            <th class="col-actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach(item => { %>
+            <tr class="<%= item.stock <= item.stock_minimo ? 'row-alert' : '' %>">
+              <td><%= item.codigo %></td>
+              <td><%= item.nombre %></td>
+              <td><%= item.categoria_nombre %></td>
+              <td><%= item.stock %> <%= item.unidad_medida %></td>
+              <td>$<%= Number(item.precio).toFixed(2) %></td>
+              <td>
+                <span class="badge badge-<%= item.estado === 'activo' ? 'success' : 'muted' %>">
+                  <%= item.estado %>
+                </span>
+              </td>
+              <td class="col-actions">
+                <a class="btn btn-small" href="/movimientos/nuevo?item_id=<%= item.id %>">Movimiento</a>
+                <a class="btn btn-small" href="/items/<%= item.id %>/editar">Editar</a>
+                <form
+                  id="del-item-<%= item.id %>"
+                  action="/items/<%= item.id %>?_method=DELETE"
+                  method="POST"
+                  class="inline-form"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-small btn-danger"
+                    onclick="confirmarEliminacion('del-item-<%= item.id %>', 'Se eliminara el item «<%= item.codigo %>»')"
+                  >Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </main>
+
+  <%- include('../partials/alerts') %>
+</body>
+</html>

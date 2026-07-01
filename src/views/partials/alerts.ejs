@@ -1,0 +1,33 @@
+<script>
+  const __flashSuccess = <%- JSON.stringify(success || []) %>;
+  const __flashError = <%- JSON.stringify(error || []) %>;
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3500,
+      timerProgressBar: true
+    });
+
+    __flashSuccess.forEach((msg) => Toast.fire({ icon: 'success', title: msg }));
+    __flashError.forEach((msg) => Toast.fire({ icon: 'error', title: msg }));
+  });
+
+  function confirmarEliminacion(formId, mensaje) {
+    Swal.fire({
+      title: '¿Estas seguro?',
+      text: mensaje || 'Esta accion no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, eliminar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById(formId).submit();
+      }
+    });
+  }
+</script>
